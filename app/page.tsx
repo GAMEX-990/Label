@@ -48,6 +48,9 @@ export default function Home() {
           </div>
         </div>
         <hr className="w-full" />
+        <div className="bg-amber-300 flex items-center justify-center mt-20">
+          <h1 className="text-9xl">Demo ยังใช้ไม่ได้</h1>
+        </div>
       </div>
       <Dialog open={open_add_label} onOpenChange={setOpenAddLabel}>
         <DialogContent className="w-250 h-150 flex flex-col overflow-scroll">
