@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Table, TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { format } from "date-fns";
 import { CalendarClock, Tag } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -35,6 +36,16 @@ export default function Home() {
     setTableData(rows)
     console.log(rows)
   }
+
+  const handleclear = () => {
+    setTableData([]);
+
+    const textarea = document.getElementById("textarea-message") as HTMLTextAreaElement | null;
+    if (textarea) {
+     textarea.value = "";
+    }
+  }
+
   return (
     <div>
       <div className="flex flex-col gap-4">
@@ -43,7 +54,8 @@ export default function Home() {
             <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label Print<span className="text-sm text-gray-500"><Tag /></span></h1>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setOpenAddLabel(true)} variant="outline">เพิ่ม Label</Button>
+            <Button onClick={() => {setOpenAddLabel(true),setDate(undefined)}} variant="outline">เพิ่ม Label</Button>
+            <Button variant="outline">PrintLabel</Button>
             <Button variant="destructive">ลบ Label ทั้งหมด</Button>
           </div>
         </div>
@@ -56,8 +68,11 @@ export default function Home() {
         <DialogContent className="w-250 h-150 flex flex-col overflow-scroll">
           <DialogHeader className="flex flex-row items-center justify-between px-8">
             <DialogTitle>เพิ่ม Label</DialogTitle>
-            <Button className={`${tableData.length === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={tableData.length === 0 || date === undefined} variant="outline">บันทึก</Button>
           </DialogHeader>
+          <div className="flex gap-3 justify-end">
+          <Button variant="destructive" onClick={handleclear}>ล้าง Label</Button>
+          <Button onClick={() => {date === undefined ? setOpenDate(true) : setOpenAddLabel(false)}} disabled={tableData.length === 0} variant="outline">บันทึก</Button>
+          </div>
           <Field>
             <Textarea onPaste={handlePaste} id="textarea-message" placeholder="วางข้อมูลสินค้าเข้าจาก ITEC" />
             <Button variant="outline" onClick={() => setOpenDate(true)}>กรุณาเลือกวันที่ด้วยนะครับ <span><CalendarClock /></span></Button>
@@ -67,9 +82,9 @@ export default function Home() {
               {tableData.slice(1).map((item, index) => (
                 <div key={index} className="p-2 text-center border rounded-lg shadow-sm text-sm bg-white">
                   <span>
-                    <span className={`${item}`}>{item[4]}</span>
+                    <span>{item[4]}</span>
                     <br />
-                    {date?.toISOString().split("T")[0]}
+                    {date ? format(date, "yyyy-MM-dd") : ""}
                   </span>
                 </div>
               ))}
@@ -80,12 +95,10 @@ export default function Home() {
 
       <Dialog open={open_date} onOpenChange={setOpenDate}>
         <DialogContent className={`w-80`}>
-          <DialogHeader className="flex flex-row items-center justify-between px-8">
+          <DialogHeader>
             <DialogTitle>เพิ่มวันที่</DialogTitle>
-            <Button variant="outline">บันทึก</Button>
           </DialogHeader>
           <div className="items-center flex flex-col">
-
             <Calendar
               mode="single"
               selected={date}
@@ -93,6 +106,10 @@ export default function Home() {
               className="rounded-lg border"
               captionLayout="dropdown"
             />
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button onClick={() => setDate(undefined)} variant="destructive">ล้างวันที่</Button>
+            <Button variant="outline">บันทึก</Button>
           </div>
         </DialogContent>
       </Dialog>
