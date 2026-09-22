@@ -270,7 +270,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
             <div className="flex gap-2 print:hidden">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label</Button>
               <Button onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel</Button>
-              <Button onClick={() => setOpenconall(true)} variant="destructive">ลบ Label ทั้งหมด</Button>
+              <Button onClick={() => setOpenconall(true)} disabled={isLoading} variant="destructive">ลบ Label ทั้งหมด</Button>
             </div>
           </div>
           <hr className="w-full print:hidden" />
@@ -298,6 +298,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
                             variant="destructive"
                             size="sm"
                             className="h-8 text-xs font-normal print:hidden"
+                            disabled={isLoading}
                             onClick={() => { setOpencon(true), getpo(item.po) }}
                           >
                             ลบ PO #{item.po}
