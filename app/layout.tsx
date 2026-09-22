@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, K2D } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toast";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${K2d.variable} font-k2d-name h-full antialiased`}
     >
+      <Toaster/>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

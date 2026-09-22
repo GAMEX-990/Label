@@ -128,3 +128,28 @@
     @apply font-sans;
   }
 }
+
+/* app/globals.css */
+
+@media print {
+  /* กำหนดขนาดกระดาษเป็น A4 แนวตั้ง และตั้งระยะขอบ 8mm */
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  /* บังคับให้เบราว์เซอร์พิมพ์สีและเส้นขอบทั้งหมด */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ป้องกันไม่ให้การ์ดขาดครึ่งหน้ากระดาษ */
+  .label-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
