@@ -7,7 +7,7 @@ import Loader from "@/components/ui/loaders";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { format } from "date-fns";
-import { CalendarClock, Divide, Tag } from "lucide-react";
+import { BrushCleaning, CalendarClock, ChevronsUp, Divide, Plus, Printer, Save, Tag, Trash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { ProductType } from "./types/product";
@@ -24,6 +24,7 @@ export default function Home() {
   const [open_date, setOpenDate] = useState(false);
   const [open_con, setOpencon] = useState(false);
   const [open_conall, setOpenconall] = useState(false);
+  const [open_print, setOpenprint] = useState(false);
 
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [isLoadingdeletepo, setisLoadingdeletepo] = useState<boolean>(false);
@@ -248,7 +249,7 @@ export default function Home() {
   // app/page.tsx
 
   const handlePrint = () => {
-    // ตรวจสอบว่ามีข้อมูลสินค้าหรือไม่
+    setOpenprint(false);
     if (!product || product.length === 0) {
       toast.add({
         type: "error",
@@ -256,9 +257,9 @@ export default function Home() {
       });
       return;
     }
-
-    // เรียกคำสั่งพิมพ์ของเบราว์เซอร์
-    window.print();
+    setTimeout(() => {
+      window.print();
+    }, 250);
   };
 
   return (
@@ -271,13 +272,13 @@ export default function Home() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between mt-10 px-50">
             <div>
-              <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span></h1>
+              <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
               <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
             </div>
             <div className="flex gap-2 print:hidden">
-              <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label</Button>
-              <Button onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel</Button>
-              <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด</Button>
+              <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
+              <Button onClick={() => setOpenprint(true)} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
+              <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
           </div>
           <hr className="w-full print:hidden" />
@@ -309,7 +310,7 @@ export default function Home() {
                             className="h-8 text-xs font-normal print:hidden"
                             onClick={() => { setOpencon(true), getpo(item.po) }}
                           >
-                            ลบ PO #{item.po}
+                            ลบ PO #{item.po} <Trash />
                           </Button>
                         </div>
                       )}
@@ -348,16 +349,21 @@ export default function Home() {
       ) : (
         <Dialog open={open_add_label} onOpenChange={setOpenAddLabel}>
           <DialogContent className="w-250 h-150 flex flex-col overflow-scroll">
-            <DialogHeader className="flex flex-row items-center justify-between px-8">
-              <DialogTitle>เพิ่ม Label</DialogTitle>
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex font-bold">เพิ่ม<span className="flex items-center text-yellow-500">Label<Plus /></span></DialogTitle>
             </DialogHeader>
-            <div className="flex gap-3 justify-end">
-              <Button variant="destructive" onClick={handleclear}>ล้าง Label</Button>
-              <Button onClick={saveproduct} disabled={tableData.length === 0} variant="outline">บันทึก</Button>
+            <div className="flex justify-between items-center">
+              <div>
+                <p><span className="text-yellow-500 font-bold">Tips:</span> <span className="text-gray-500">กดล้าง Label เพื่อล้างช่องและตาราง Label</span></p>
+              </div>
+              <div className="flex gap-3">
+                <Button variant="destructive" onClick={handleclear}>ล้าง Label  <BrushCleaning /></Button>
+                <Button variant="outline" onClick={() => setOpenDate(true)}>กรุณาเลือกวันที่ด้วยนะครับ <span><CalendarClock /></span></Button>
+                <Button onClick={saveproduct} disabled={tableData.length === 0} variant="outline">บันทึก <Save /></Button>
+              </div>
             </div>
             <Field>
-              <Textarea onPaste={handlePaste} onChange={(e) => processTableData(e.target.value)} id="textarea-message" placeholder="วางข้อมูลสินค้าเข้าจาก ITEC" />
-              <Button variant="outline" onClick={() => setOpenDate(true)}>กรุณาเลือกวันที่ด้วยนะครับ <span><CalendarClock /></span></Button>
+              <Textarea onPaste={handlePaste} onChange={(e) => processTableData(e.target.value)} id="textarea-message" placeholder="วางข้อมูลสินค้าเข้าจากแสดงรายการสินค้าเข้าจาก ITEC..." />
             </Field>
             <div>
               <div className="grid grid-cols-5 gap-3">
@@ -398,10 +404,10 @@ export default function Home() {
       </Dialog>
 
       <Dialog open={open_con} onOpenChange={setOpencon}>
-        <DialogContent className={`w-80`}>
+        <DialogContent className={`w-90`}>
           <DialogHeader>
-            <DialogTitle>ยืนยันการลบ Label</DialogTitle>
-            <p>หากลบแล้ว <span className="text-red-500 font-bold">ไม่สามารถกู้คืนได้อีก!!</span></p>
+            <DialogTitle className="text-xl text-red-500 font-bold">ยืนยันการลบ Label</DialogTitle>
+            <p>หากลบแล้ว <span className="text-red-500">ไม่สามารถกู้คืนได้อีก!!</span></p>
           </DialogHeader>
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpencon(false)} variant="outline">ยกเลิก</Button>
@@ -411,14 +417,30 @@ export default function Home() {
       </Dialog>
 
       <Dialog open={open_conall} onOpenChange={setOpenconall}>
-        <DialogContent className={`w-80`}>
+        <DialogContent className={`w-90`}>
           <DialogHeader>
-            <DialogTitle>ยืนยันการลบ Label ทั้งหมด</DialogTitle>
-            <p>หากลบแล้ว <span className="text-red-500 font-bold">ไม่สามารถกู้คืนได้อีก!!</span></p>
+            <DialogTitle className="text-xl text-red-500 font-bold">ยืนยันการลบ Label ทั้งหมด</DialogTitle>
+            <p>หากลบแล้ว <span className="text-red-500">ไม่สามารถกู้คืนได้อีก!!</span></p>
           </DialogHeader>
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpenconall(false)} variant="outline">ยกเลิก</Button>
             <Button disabled={isLoadingdeleteall} onClick={handleDeleteAll} variant="destructive">{isLoadingdeleteall ? (<><Spinner />กำลังลบ...</>) : (<>ลบ</>)}</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={open_print} onOpenChange={setOpenprint}>
+        <DialogContent className="w-80 print:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
+          </DialogHeader>
+          <div>
+            <p>แนะนำปรับขนาดกระดาษเป็น 90% ก่อนปริ้นเพื่อความพอดีของ Label</p>
+            <p className="text-blue-500">(หรือตามความเหมาะสมครับ)</p>
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button onClick={() => setOpenprint(false)} variant="outline">ยกเลิก</Button>
+            <Button onClick={handlePrint} variant="default">Print</Button>
           </div>
         </DialogContent>
       </Dialog>
