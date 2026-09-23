@@ -12,6 +12,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { ProductType } from "./types/product";
 import dynamic from "next/dynamic";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Home() {
   const [po, getpo] = useState(0);
@@ -25,47 +26,52 @@ export default function Home() {
   const [open_conall, setOpenconall] = useState(false);
 
   const [isLoading, setisLoading] = useState<boolean>(false);
-  // const [isLoadingdata, setisLoadingdata] = useState<boolean>(false);
+  const [isLoadingdeletepo, setisLoadingdeletepo] = useState<boolean>(false);
+  const [isLoadingdeleteall, setisLoadingdeleteall] = useState<boolean>(false);
 
   useEffect(() => {
     fetchdata();
   }, [])
 
   // โหลด Loader2 เฉพาะฝั่งเบราว์เซอร์เท่านั้น ป้องกันปัญหา SSR 100%
-const Loader2 = dynamic(() => import("@/components/ui/labelanimation"), {
-  ssr: false,
-});
+  const Loader2 = dynamic(() => import("@/components/ui/labelanimation"), {
+    ssr: false,
+  });
+
+  const Loadertext = dynamic(() => import("@/components/ui/textrun"), {
+    ssr: false,
+  });
 
   // ฟังก์ชันสำหรับแปลงข้อความตารางจาก ITEC รองรับตัวขึ้นบรรทัดใหม่ทุกประเภท
-const processTableData = (text: string) => {
-  if (!text) return;
+  const processTableData = (text: string) => {
+    if (!text) return;
 
-  const clean = (val: string) =>
-    val
-      ? val
+    const clean = (val: string) =>
+      val
+        ? val
           .trim()
           .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
           .replace(/F\+/g, "")
           .trim()
-      : "";
+        : "";
 
-  // 1. แปลง \r\n และ \r ให้กลายเป็น \n ให้หมดก่อนตัดบรรทัด
-  const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    // 1. แปลง \r\n และ \r ให้กลายเป็น \n ให้หมดก่อนตัดบรรทัด
+    const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
-  // 2. ตัดบรรทัด และแยกคอลัมน์ด้วย Tab (\t)
-  const rows = normalized
-    .trim()
-    .split("\n")
-    .map((row) => row.split("\t").map(clean))
-    .filter((row) => row.some((cell) => cell !== ""));
+    // 2. ตัดบรรทัด และแยกคอลัมน์ด้วย Tab (\t)
+    const rows = normalized
+      .trim()
+      .split("\n")
+      .map((row) => row.split("\t").map(clean))
+      .filter((row) => row.some((cell) => cell !== ""));
 
-  setTableData(rows);
-};
+    setTableData(rows);
+  };
 
-const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-  const clipboardData = e.clipboardData.getData("text");
-  processTableData(clipboardData);
-};
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const clipboardData = e.clipboardData.getData("text");
+    processTableData(clipboardData);
+  };
 
   const handleclear = () => {
     setTableData([]);
@@ -118,8 +124,6 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
           description: "บันทึกข้อมูลสำเร็จ",
         })
         fetchdata();
-        setOpenAddLabel(false);
-        setTableData([]);
       } else {
         toast.add({
           type: "error",
@@ -135,6 +139,8 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         priority: "high"
       })
     } finally {
+      setOpenAddLabel(false);
+      setTableData([]);
       setisLoading(false)
     }
   }
@@ -164,7 +170,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
   }
 
   const handleDeletePo = async (poToDelete: number) => {
-    setisLoading(true);
+    setisLoadingdeletepo(true);
     // ถามยืนยันก่อนลบ ป้องกันการกดพลาด
     // const isConfirm = window.confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบสินค้าทั้งหมดใน PO #${poToDelete}?`);
     // if (!isConfirm) return;
@@ -189,7 +195,6 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
           type: "success",
           description: "ลบ PO สำเร็จ"
         })
-        setOpencon(false);
         setproduct((prev) => prev.filter((item) => item.po !== poToDelete));
       } else {
         toast.add({
@@ -203,12 +208,13 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         description: "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"
       });
     } finally {
-      setisLoading(false);
+      setOpencon(false);
+      setisLoadingdeletepo(false);
     }
   };
 
   const handleDeleteAll = async () => {
-    setisLoading(true);
+    setisLoadingdeleteall(true);
     try {
       const res = await fetch("api/products?all=true", {
         method: "DELETE",
@@ -234,7 +240,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         description: "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"
       });
     } finally {
-      setisLoading(false);
+      setisLoadingdeleteall(false);
       setOpenconall(false);
     }
   };
@@ -265,19 +271,22 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between mt-10 px-50">
             <div>
-              <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label Print<span className="text-sm text-gray-500"><Tag /></span></h1>
+              <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span></h1>
+              <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
             </div>
             <div className="flex gap-2 print:hidden">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label</Button>
               <Button onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel</Button>
-              <Button onClick={() => setOpenconall(true)} disabled={isLoading} variant="destructive">ลบ Label ทั้งหมด</Button>
+              <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด</Button>
             </div>
           </div>
           <hr className="w-full print:hidden" />
           {product.length === 0 ? (
             <div className="flex flex-col justify-center h-screen items-center">
-            <h1>ยังไม่มี Label...</h1>
-            <Loader2/>
+              <div className="flex flex-col items-center justify-center">
+                <Loadertext />
+                <Loader2 />
+              </div>
             </div>
           ) : (
             <main className="max-w-7xl mx-auto p-4 sm:p-6 print:p-0 print:m-0 print:max-w-none">
@@ -290,7 +299,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
                       {/* แถบหัวข้อ PO (ซ่อนอัตโนมัติเวลาสั่งพิมพ์) */}
                       {isNewPo && (
                         <div className="col-span-full flex items-center justify-between pt-6 pb-2 first:pt-0 border-b border-slate-200 mb-1">
-                          <div className="flex items-center gap-2 bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-sm font-semibold shadow-sm">
+                          <div>
                             <span className="text-amber-400 font-bold">PO</span>
                             <span>#{item.po}</span>
                           </div>
@@ -298,7 +307,6 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
                             variant="destructive"
                             size="sm"
                             className="h-8 text-xs font-normal print:hidden"
-                            disabled={isLoading}
                             onClick={() => { setOpencon(true), getpo(item.po) }}
                           >
                             ลบ PO #{item.po}
@@ -397,7 +405,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
           </DialogHeader>
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpencon(false)} variant="outline">ยกเลิก</Button>
-            <Button onClick={() => handleDeletePo(po)} variant="destructive">ลบ</Button>
+            <Button disabled={isLoadingdeletepo} onClick={() => handleDeletePo(po)} variant="destructive">{isLoadingdeletepo ? (<><Spinner />กำลังลบ...</>) : (<>ลบ</>)}</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -410,7 +418,7 @@ const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
           </DialogHeader>
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpenconall(false)} variant="outline">ยกเลิก</Button>
-            <Button onClick={handleDeleteAll} variant="destructive">ลบ</Button>
+            <Button disabled={isLoadingdeleteall} onClick={handleDeleteAll} variant="destructive">{isLoadingdeleteall ? (<><Spinner />กำลังลบ...</>) : (<>ลบ</>)}</Button>
           </div>
         </DialogContent>
       </Dialog>
