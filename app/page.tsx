@@ -385,7 +385,7 @@ export default function Home() {
       <Dialog open={open_date} onOpenChange={setOpenDate}>
         <DialogContent className={`w-80`}>
           <DialogHeader>
-            <DialogTitle>เพิ่มวันที่</DialogTitle>
+            <DialogTitle className="text-2xl flex font-bold items-center gap-2">เพิ่มวันที่ <span className="text-yellow-500"><CalendarClock /></span></DialogTitle>
           </DialogHeader>
           <div className="items-center flex flex-col">
             <Calendar
@@ -397,8 +397,8 @@ export default function Home() {
             />
           </div>
           <div className="flex gap-3 justify-end">
-            <Button onClick={() => setDate(undefined)} variant="destructive">ล้างวันที่</Button>
-            <Button onClick={() => setOpenDate(false)} variant="outline">บันทึก</Button>
+            <Button onClick={() => setDate(undefined)} variant="destructive">ล้างวันที่ <BrushCleaning /></Button>
+            <Button onClick={() => setOpenDate(false)} variant="outline">บันทึก <Save /></Button>
           </div>
         </DialogContent>
       </Dialog>
