@@ -272,12 +272,12 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between mt-10 px-50">
-            <div>
+          <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
+            <div className="">
               <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
               <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
             </div>
-            <div className="flex gap-2 print:hidden">
+            <div className="flex print:hidden lg:gap-x-4">
               <Button onClick={() => { setOpenAddLabelcon(true) }} variant="outline">เพิ่ม Label <Plus /></Button>
               <Button onClick={() => setOpenprint(true)} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
@@ -355,11 +355,11 @@ export default function Home() {
             <DialogHeader>
               <DialogTitle className="text-2xl flex font-bold">เพิ่ม<span className="flex items-center text-yellow-500">Label<Plus /></span></DialogTitle>
             </DialogHeader>
-            <div className="flex justify-between items-center">
+            <div className="lg:flex lg:justify-between lg:items-center space-y-2">
               <div>
                 <p><span className="text-yellow-500 font-bold">Tips:</span> <span className="text-gray-500">กดล้าง Label เพื่อล้างช่องและตาราง Label</span></p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex lg:gap-3">
                 <Button variant="destructive" onClick={handleclear}>ล้าง Label  <BrushCleaning /></Button>
                 <Button variant="outline" onClick={() => setOpenDate(true)}>กรุณาเลือกวันที่ด้วยนะครับ <span><CalendarClock /></span></Button>
                 <Button onClick={saveproduct} disabled={tableData.length === 0} variant="outline">บันทึก <Save /></Button>
@@ -453,10 +453,13 @@ export default function Home() {
           <DialogHeader>
             <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
           </DialogHeader>
-          <div>
-            <p>สามารถเพิ่ม Label ได้หลายชุดตามใบ PO ได้เลย</p>
-            <p className="text-blue-500">(หรือตามความเหมาะสมครับ)</p>
-            <div className="flex items-center justify-center">
+          <div className="space-y-4">
+            <div>
+              <p>สามารถเพิ่ม Label ได้หลายชุดตามใบ PO ได้เลย</p>
+              <p className="text-blue-500">(หรือตามความเหมาะสมครับ)</p>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold">ตัวอย่าง</h1>
               <Image
                 src="/image/ex1.png"
                 width={600}
@@ -467,7 +470,7 @@ export default function Home() {
           </div>
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpenAddLabelcon(false)} variant="outline">ยกเลิก</Button>
-            <Button onClick={() => {setOpenAddLabelcon(false),setOpenAddLabel(true), setDate(undefined)}} variant="default">เพิ่ม Label <Plus /></Button>
+            <Button onClick={() => { setOpenAddLabelcon(false), setOpenAddLabel(true), setDate(undefined) }} variant="default">เพิ่ม Label <Plus /></Button>
           </div>
         </DialogContent>
       </Dialog>
