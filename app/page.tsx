@@ -13,6 +13,7 @@ import { useState } from "react";
 import { ProductType } from "./types/product";
 import dynamic from "next/dynamic";
 import { Spinner } from "@/components/ui/spinner";
+import Image from "next/image";
 
 export default function Home() {
   const [po, getpo] = useState(0);
@@ -21,6 +22,7 @@ export default function Home() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   const [open_add_label, setOpenAddLabel] = useState(false);
+  const [open_add_label_con, setOpenAddLabelcon] = useState(false);
   const [open_date, setOpenDate] = useState(false);
   const [open_con, setOpencon] = useState(false);
   const [open_conall, setOpenconall] = useState(false);
@@ -276,7 +278,7 @@ export default function Home() {
               <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
             </div>
             <div className="flex gap-2 print:hidden">
-              <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
+              <Button onClick={() => { setOpenAddLabelcon(true) }} variant="outline">เพิ่ม Label <Plus /></Button>
               <Button onClick={() => setOpenprint(true)} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
@@ -285,6 +287,7 @@ export default function Home() {
           {product.length === 0 ? (
             <div className="flex flex-col justify-center h-screen items-center">
               <div className="flex flex-col items-center justify-center">
+                <h1>เพิ่ม Label ได้ที่ปุ่มด้านบน...</h1>
                 <Loadertext />
                 <Loader2 />
               </div>
@@ -441,6 +444,30 @@ export default function Home() {
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpenprint(false)} variant="outline">ยกเลิก</Button>
             <Button onClick={handlePrint} variant="default">Print</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={open_add_label_con} onOpenChange={setOpenAddLabelcon}>
+        <DialogContent className="w-180 print:hidden">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
+          </DialogHeader>
+          <div>
+            <p>สามารถเพิ่ม Label ได้หลายชุดตามใบ PO ได้เลย</p>
+            <p className="text-blue-500">(หรือตามความเหมาะสมครับ)</p>
+            <div className="flex items-center justify-center">
+              <Image
+                src="/image/ex1.png"
+                width={600}
+                height={200}
+                alt="ตัวอย่าง"
+              />
+            </div>
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button onClick={() => setOpenAddLabelcon(false)} variant="outline">ยกเลิก</Button>
+            <Button onClick={() => {setOpenAddLabelcon(false),setOpenAddLabel(true), setDate(undefined)}} variant="default">เพิ่ม Label <Plus /></Button>
           </div>
         </DialogContent>
       </Dialog>
