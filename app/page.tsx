@@ -32,6 +32,8 @@ export default function Home() {
   const [isLoadingdeletepo, setisLoadingdeletepo] = useState<boolean>(false);
   const [isLoadingdeleteall, setisLoadingdeleteall] = useState<boolean>(false);
 
+  const polist = [...new Set(product.map((item) => item.po))]
+
   useEffect(() => {
     fetchdata();
   }, [])
@@ -278,7 +280,7 @@ export default function Home() {
               <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
             </div>
             <div className="flex print:hidden lg:gap-x-4">
-              <Button onClick={() => { setOpenAddLabelcon(true) }} variant="outline">เพิ่ม Label <Plus /></Button>
+              <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
               <Button onClick={() => setOpenprint(true)} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
@@ -294,46 +296,41 @@ export default function Home() {
             </div>
           ) : (
             <main className="max-w-7xl mx-auto p-4 sm:p-6 print:p-0 print:m-0 print:max-w-none">
+              <div className="flex gap-2 mb-4 print:hidden">
+                {polist.map((poNum, index) => (
+                  <div key={index}>
+                    <Button
+                      key={poNum}
+                      variant="destructive"
+                      size="sm"
+                      className="h-8 text-xs font-normal"
+                      onClick={() => {
+                        getpo(poNum);
+                        setOpencon(true);
+                      }}
+                    >
+                      ลบ PO #{poNum} <Trash className="w-3.5 h-3.5 ml-1" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 print:grid-cols-4 print:gap-0">
                 {product.map((item, index) => {
-                  const isNewPo = index === 0 || item.po !== product[index - 1].po;
-
                   return (
                     <React.Fragment key={item.id || index}>
-                      {/* แถบหัวข้อ PO (ซ่อนอัตโนมัติเวลาสั่งพิมพ์) */}
-                      {isNewPo && (
-                        <div className="col-span-full flex items-center justify-between pt-6 pb-2 first:pt-0 border-b border-slate-200 mb-1">
-                          <div>
-                            <span className="text-amber-400 font-bold">PO</span>
-                            <span>#{item.po}</span>
-                          </div>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            className="h-8 text-xs font-normal print:hidden"
-                            onClick={() => { setOpencon(true), getpo(item.po) }}
-                          >
-                            ลบ PO #{item.po} <Trash />
-                          </Button>
-                        </div>
-                      )}
-
-                      {/* กล่องป้ายสินค้า (เวลาพิมพ์จะเปลี่ยนเป็นตารางเส้นประพร้อมตัด) */}
                       <div
                         className={`
-                    label-card bg-white p-3.5 flex flex-col justify-between
+                    label-card bg-white p-2 flex flex-col justify-between
                     border border-slate-200 rounded-xl shadow-sm min-h-[90px]
                     print:border print:border-dashed print:border-gray-500 
                     print:rounded-none print:shadow-none print:box-border
-                  `}
-                      >
+                  `}>
                         <p className="text-sm font-medium text-slate-900 text-center print:text-[13px] print:leading-snug print:font-semibold">
                           {item.name}
                         </p>
-
                         {item.times_in && (
                           <div className="mt-1 pt-1 border-t border-slate-100 print:border-t print:border-gray-300 flex items-center justify-center text-xs text-gray-500 font-mono print:text-[11px] print:text-black">
-                            <span>{new Date(item.times_in).toLocaleDateString("en-CA")}</span>
+                            <span>(PO#{item.po}){new Date(item.times_in).toLocaleDateString("en-CA")}</span>
                           </div>
                         )}
                       </div>
@@ -448,7 +445,7 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={open_add_label_con} onOpenChange={setOpenAddLabelcon}>
+      {/* <Dialog open={open_add_label_con} onOpenChange={setOpenAddLabelcon}>
         <DialogContent className="w-180 print:hidden">
           <DialogHeader>
             <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
@@ -473,7 +470,7 @@ export default function Home() {
             <Button onClick={() => { setOpenAddLabelcon(false), setOpenAddLabel(true), setDate(undefined) }} variant="default">เพิ่ม Label <Plus /></Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }
