@@ -281,7 +281,7 @@ export default function Home() {
             </div>
             <div className="flex print:hidden lg:gap-x-4">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
-              <Button onClick={() => setOpenprint(true)} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
+              <Button onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
           </div>
@@ -322,14 +322,16 @@ export default function Home() {
                         className={`
                     label-card bg-white p-2 flex flex-col justify-between
                     border border-slate-200 rounded-xl shadow-sm min-h-[90px]
-                    print:border print:border-dashed print:border-gray-500 
+
+                    print:border print:border-dashed print:border-gray-400
                     print:rounded-none print:shadow-none print:box-border
+                    print:p-2 print:min-h-[75px] print:max-h-[80px]
                   `}>
-                        <p className="text-sm font-medium text-slate-900 text-center print:text-[13px] print:leading-snug print:font-semibold">
+                        <p className="text-sm font-medium text-slate-900 text-center print:text-[11px] print:leading-tight print:font-semibold">
                           {item.name}
                         </p>
                         {item.times_in && (
-                          <div className="mt-1 pt-1 border-t border-slate-100 print:border-t print:border-gray-300 flex items-center justify-center text-xs text-gray-500 font-mono print:text-[11px] print:text-black">
+                          <div className="mt-1 pt-0.5 border-t border-slate-100 print:border-t print:border-gray-300 flex items-center justify-center text-xs text-gray-500 font-mono print:text-[9.5px] print:text-black">
                             <span>(PO#{item.po}){new Date(item.times_in).toLocaleDateString("en-CA")}</span>
                           </div>
                         )}
@@ -429,7 +431,7 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={open_print} onOpenChange={setOpenprint}>
+      {/* <Dialog open={open_print} onOpenChange={setOpenprint}>
         <DialogContent className="w-80 print:hidden">
           <DialogHeader>
             <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
@@ -443,7 +445,7 @@ export default function Home() {
             <Button onClick={handlePrint} variant="default">Print</Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* <Dialog open={open_add_label_con} onOpenChange={setOpenAddLabelcon}>
         <DialogContent className="w-180 print:hidden">
