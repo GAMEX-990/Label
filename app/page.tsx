@@ -50,26 +50,37 @@ export default function Home() {
   // ฟังก์ชันสำหรับแปลงข้อความตารางจาก ITEC รองรับตัวขึ้นบรรทัดใหม่ทุกประเภท
   const processTableData = (text: string) => {
     if (!text) return;
-
+  
     const clean = (val: string) =>
       val
         ? val
-          .trim()
-          .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
-          .replace(/F\+/g, "")
-          .trim()
+            .trim()
+            .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
+            .replace(/F\+/g, "")
+            .trim()
         : "";
-
+  
     // 1. แปลง \r\n และ \r ให้กลายเป็น \n ให้หมดก่อนตัดบรรทัด
     const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-
+  
     // 2. ตัดบรรทัด และแยกคอลัมน์ด้วย Tab (\t)
     const rows = normalized
       .trim()
       .split("\n")
       .map((row) => row.split("\t").map(clean))
-      .filter((row) => row.some((cell) => cell !== ""));
-
+      .filter((row, index) => {
+        // ตรวจสอบว่าไม่ใช่แถวว่าง
+        const isNotEmpty = row.some((cell) => cell !== "");
+  
+        // ตรวจสอบว่ามีคำที่เป็นหัวตารางหรือไม่
+        const isHeader = row.some(
+          (cell) => cell.includes("Product (Name)") || cell.includes("Doc No")
+        );
+  
+        // ตัดแถวว่างทิ้ง และตัดแถวหัวตารางที่โผล่มาซ้ำในชุดต่อๆ ไป (index > 0) ทิ้งอัตโนมัติ
+        return isNotEmpty && !(index > 0 && isHeader);
+      });
+  
     setTableData(rows);
   };
 
@@ -277,11 +288,11 @@ export default function Home() {
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
             <div className="">
               <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500 print:hidden">version 1.0</p>
+              <p className="text-sm text-gray-500 print:hidden">version 1.1</p>
             </div>
             <div className="flex print:hidden lg:gap-x-4">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
-              <Button onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
+              <Button id="label-print-area" onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
           </div>
