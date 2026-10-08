@@ -50,19 +50,19 @@ export default function Home() {
   // ฟังก์ชันสำหรับแปลงข้อความตารางจาก ITEC รองรับตัวขึ้นบรรทัดใหม่ทุกประเภท
   const processTableData = (text: string) => {
     if (!text) return;
-  
+
     const clean = (val: string) =>
       val
         ? val
-            .trim()
-            .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
-            .replace(/F\+/g, "")
-            .trim()
+          .trim()
+          .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
+          .replace(/F\+/g, "")
+          .trim()
         : "";
-  
+
     // 1. แปลง \r\n และ \r ให้กลายเป็น \n ให้หมดก่อนตัดบรรทัด
     const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  
+
     // 2. ตัดบรรทัด และแยกคอลัมน์ด้วย Tab (\t)
     const rows = normalized
       .trim()
@@ -71,16 +71,16 @@ export default function Home() {
       .filter((row, index) => {
         // ตรวจสอบว่าไม่ใช่แถวว่าง
         const isNotEmpty = row.some((cell) => cell !== "");
-  
+
         // ตรวจสอบว่ามีคำที่เป็นหัวตารางหรือไม่
         const isHeader = row.some(
           (cell) => cell.includes("Product (Name)") || cell.includes("Doc No")
         );
-  
+
         // ตัดแถวว่างทิ้ง และตัดแถวหัวตารางที่โผล่มาซ้ำในชุดต่อๆ ไป (index > 0) ทิ้งอัตโนมัติ
         return isNotEmpty && !(index > 0 && isHeader);
       });
-  
+
     setTableData(rows);
   };
 
@@ -307,6 +307,9 @@ export default function Home() {
             </div>
           ) : (
             <main className="max-w-7xl mx-auto p-4 sm:p-6 print:p-0 print:m-0 print:max-w-none">
+              <div className="flex justify-between items-center mb-4 print:hidden">
+                <p className="text-sm text-gray-500">ทำวันที่: {new Date(product[0].createdAt).toLocaleDateString("en-CA")}</p>
+              </div>
               <div className="flex gap-2 mb-4 print:hidden">
                 {polist.map((poNum, index) => (
                   <div key={index}>
