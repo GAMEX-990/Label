@@ -13,7 +13,6 @@ import { useState } from "react";
 import { ProductType } from "./types/product";
 import dynamic from "next/dynamic";
 import { Spinner } from "@/components/ui/spinner";
-import Image from "next/image";
 
 export default function Home() {
   const [po, getpo] = useState(0);
@@ -286,9 +285,9 @@ export default function Home() {
       ) : (
         <div className="flex flex-col gap-4">
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
-            <div className="">
-              <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500 print:hidden">version 1.2(UI Print Update)</p>
+            <div className="print:hidden">
+              <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
+              <p className="text-sm text-gray-500">version 1.2(UI Print Update)</p>
               <p className="text-sm text-gray-500">date: 12/10/2026</p>
             </div>
             <div className="flex print:hidden lg:gap-x-4">
@@ -307,8 +306,8 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <main className="max-w-7xl mx-auto p-4 sm:p-6 print:p-0 print:m-0 print:max-w-none">
-              <div className="flex justify-between items-center mb-4 print:hidden">
+            <main className="max-w-7xl mx-auto sm:pt-3 print:p-0 print:m-0 print:max-w-none">
+              <div className="mb-2 print:hidden">
                 <p className="text-sm text-gray-500">วันที่: {new Date(product[0].createdAt).toLocaleDateString("en-CA")}</p>
               </div>
               <div className="flex gap-2 mb-4 print:hidden">
