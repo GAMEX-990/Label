@@ -288,7 +288,8 @@ export default function Home() {
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
             <div className="">
               <h1 className="print:hidden flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500 print:hidden">version 1.1</p>
+              <p className="text-sm text-gray-500 print:hidden">version 1.2(UI Print Update)</p>
+              <p className="text-sm text-gray-500">date: 12/10/2026</p>
             </div>
             <div className="flex print:hidden lg:gap-x-4">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
@@ -308,7 +309,7 @@ export default function Home() {
           ) : (
             <main className="max-w-7xl mx-auto p-4 sm:p-6 print:p-0 print:m-0 print:max-w-none">
               <div className="flex justify-between items-center mb-4 print:hidden">
-                <p className="text-sm text-gray-500">ทำวันที่: {new Date(product[0].createdAt).toLocaleDateString("en-CA")}</p>
+                <p className="text-sm text-gray-500">วันที่: {new Date(product[0].createdAt).toLocaleDateString("en-CA")}</p>
               </div>
               <div className="flex gap-2 mb-4 print:hidden">
                 {polist.map((poNum, index) => (
@@ -323,30 +324,28 @@ export default function Home() {
                         setOpencon(true);
                       }}
                     >
-                      ลบ PO #{poNum} <Trash className="w-3.5 h-3.5 ml-1" />
+                      ลบ PO #{poNum} <Trash />
                     </Button>
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 print:grid-cols-4 print:gap-0">
+              <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 print:grid-cols-4">
                 {product.map((item, index) => {
                   return (
                     <React.Fragment key={item.id || index}>
                       <div
                         className={`
-                    label-card bg-white p-2 flex flex-col justify-between
-                    border border-slate-200 rounded-xl shadow-sm min-h-[90px]
+                    p-1 border border-dashed border-gray-400
 
                     print:border print:border-dashed print:border-gray-400
-                    print:rounded-none print:shadow-none print:box-border
-                    print:p-2 print:min-h-[75px] print:max-h-[80px]
+                    print:rounded-none print:shadow-none print:box-border print:px-0
                   `}>
-                        <p className="text-sm font-medium text-slate-900 text-center print:text-[11px] print:leading-tight print:font-semibold">
+                        <p className="text-sm font-medium text-slate-900 text-center print:text-[10px] print:font-semibold">
                           {item.name}
                         </p>
                         {item.times_in && (
-                          <div className="mt-1 pt-0.5 border-t border-slate-100 print:border-t print:border-gray-300 flex items-center justify-center text-xs text-gray-500 font-mono print:text-[9.5px] print:text-black">
-                            <span>(PO#{item.po}){new Date(item.times_in).toLocaleDateString("en-CA")}</span>
+                          <div className="mt-1 border-t border-slate-100 flex items-center justify-center text-xs text-gray-500 font-mono print:text-black">
+                            <p><span className="print:hidden">(PO#{item.po})</span>{new Date(item.times_in).toLocaleDateString("en-CA")}</p>
                           </div>
                         )}
                       </div>
@@ -373,7 +372,7 @@ export default function Home() {
                 <p><span className="text-yellow-500 font-bold">Tips:</span> <span className="text-gray-500">กดล้าง Label เพื่อล้างช่องและตาราง Label</span></p>
               </div>
               <div className="flex lg:gap-3">
-                <Button variant="destructive" onClick={handleclear}>ล้าง Label  <BrushCleaning /></Button>
+                <Button variant="destructive" onClick={handleclear}>ล้างช่อง Label <BrushCleaning /></Button>
                 <Button variant="outline" onClick={() => setOpenDate(true)}>กรุณาเลือกวันที่ด้วยนะครับ <span><CalendarClock /></span></Button>
                 <Button onClick={saveproduct} disabled={tableData.length === 0} variant="outline">บันทึก <Save /></Button>
               </div>
@@ -382,14 +381,11 @@ export default function Home() {
               <Textarea onPaste={handlePaste} onChange={(e) => processTableData(e.target.value)} id="textarea-message" placeholder="วางข้อมูลสินค้าเข้าจากแสดงรายการสินค้าเข้าจาก ITEC..." />
             </Field>
             <div>
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
                 {tableData.slice(1).map((item, index) => (
-                  <div key={index} className="p-2 text-center border rounded-lg shadow-sm text-sm bg-white">
-                    <span>
-                      <span>{item[4]}</span>
-                      <br />
-                      {date ? format(date, "yyyy-MM-dd") : ""}
-                    </span>
+                  <div key={index} className="p-1 border border-dashed border-gray-400">
+                      <p className="text-sm font-medium text-slate-900 text-center ">{item[4]}</p>
+                      <p className="mt-1 border-t border-slate-100 flex items-center justify-center text-xs text-gray-500 font-mono">{date ? format(date, "yyyy-MM-dd") : ""}</p>
                   </div>
                 ))}
               </div>
