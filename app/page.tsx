@@ -55,6 +55,18 @@ export default function Home() {
         ? val
           .trim()
           .replace(/^[“"”\\]+|[“"”\\]+$/g, "")
+          .replace(/Smartphone/gi, "")
+          .replace(/Tablet/gi, "")
+          .replace(/Laptop/gi, "")
+          .replace(/Desktop/gi, "")
+          .replace(/Printer/gi, "")
+          .replace(/Scanner/gi, "")
+          .replace(/Projector/gi, "")
+          .replace(/Speaker/gi, "")
+          .replace(/Microphone/gi, "")
+          .replace(/Keyboard/gi, "")
+          .replace(/Apple/gi, "")
+          .replace(/\s+/g, " ")
           .replace(/F\+/g, "")
           .trim()
         : "";
@@ -334,10 +346,10 @@ export default function Home() {
                     <React.Fragment key={item.id || index}>
                       <div
                         className={`
-                    p-1 border border-dashed border-gray-400
+                   label-card p-2 border border-dashed border-gray-400
 
                     print:border print:border-dashed print:border-gray-400
-                    print:rounded-none print:shadow-none print:box-border print:px-0
+                    print:box-border
                   `}>
                         <p className="text-sm font-medium text-slate-900 text-center print:text-[10px] print:font-semibold">
                           {item.name}
