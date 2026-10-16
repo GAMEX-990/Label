@@ -7,25 +7,30 @@ import Loader from "@/components/ui/loaders";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { format } from "date-fns";
-import { BrushCleaning, CalendarClock, ChevronsUp, Divide, Plus, Printer, Save, Tag, Trash } from "lucide-react";
+import { BrushCleaning, CalendarClock, ChevronsUp, Plus, Printer, Save, Trash } from "lucide-react";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { ProductType } from "./types/product";
 import dynamic from "next/dynamic";
 import { Spinner } from "@/components/ui/spinner";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Home() {
   const [po, getpo] = useState(0);
   const [product, setproduct] = useState<ProductType[]>([]);
   const [tableData, setTableData] = useState<string[][]>([])
   const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [tsize, gettextsize] = useState(10);
 
   const [open_add_label, setOpenAddLabel] = useState(false);
-  const [open_add_label_con, setOpenAddLabelcon] = useState(false);
+  const [open_message, setOpenmessage] = useState(false);
   const [open_date, setOpenDate] = useState(false);
   const [open_con, setOpencon] = useState(false);
   const [open_conall, setOpenconall] = useState(false);
   const [open_print, setOpenprint] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
 
   const [isLoading, setisLoading] = useState<boolean>(false);
   const [isLoadingdeletepo, setisLoadingdeletepo] = useState<boolean>(false);
@@ -34,8 +39,30 @@ export default function Home() {
   const polist = [...new Set(product.map((item) => item.po))]
 
   useEffect(() => {
-    fetchdata();
+    const fetchData = async () => {
+      try {
+        await fetchdata();
+        const isHidden = localStorage.getItem("hide_popup_preference");
+        if (!isHidden) {
+          setOpenmessage(true);
+        }
+      } catch (error) {
+        toast.add({
+          type: "error",
+          description: `${error}`,
+          priority: "high"
+        })
+      }
+    }
+    fetchData();
   }, [])
+
+  const handConfirm = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("hide_popup_preference", "true");
+    };
+    setOpenmessage(false);
+  }
 
   // โหลด Loader2 เฉพาะฝั่งเบราว์เซอร์เท่านั้น ป้องกันปัญหา SSR 100%
   const Loader2 = dynamic(() => import("@/components/ui/labelanimation"), {
@@ -45,6 +72,16 @@ export default function Home() {
   const Loadertext = dynamic(() => import("@/components/ui/textrun"), {
     ssr: false,
   });
+
+  const textsize = [
+    { label: "10px", value: 10 },
+    { label: "12px", value: 12 },
+    { label: "14px", value: 14 },
+    { label: "16px", value: 16 },
+    { label: "18px", value: 18 },
+    { label: "20px", value: 20 },
+    { label: "22px", value: 22 }
+  ]
 
   // ฟังก์ชันสำหรับแปลงข้อความตารางจาก ITEC รองรับตัวขึ้นบรรทัดใหม่ทุกประเภท
   const processTableData = (text: string) => {
@@ -299,12 +336,26 @@ export default function Home() {
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
             <div className="print:hidden">
               <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500">version 1.2(UI Print Update)</p>
-              <p className="text-sm text-gray-500">date: 12/10/2026</p>
+              <p className="text-sm text-gray-500">version 1.3(TextSize Update)</p>
             </div>
             <div className="flex print:hidden lg:gap-x-4">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
               <Button id="label-print-area" onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
+              <Select value={String(tsize)} onValueChange={(val) => gettextsize(Number(val))} items={textsize}>
+                <SelectTrigger className="w-full max-w-48">
+                  <p className="flex items-center gap-1 text-black">ขนาด <SelectValue placeholder="เลือกขนาด" /> px</p>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>ปรับขนาดตัวหนังสือ</SelectLabel>
+                    {textsize.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
             </div>
           </div>
@@ -345,13 +396,13 @@ export default function Home() {
                   return (
                     <React.Fragment key={item.id || index}>
                       <div
-                        className={`
-                   label-card p-2 border border-dashed border-gray-400
+                        style={{ fontSize: `${tsize}px` }} className={`
+                    label-card p-2 border border-dashed border-gray-400
 
                     print:border print:border-dashed print:border-gray-400
                     print:box-border
                   `}>
-                        <p className="text-sm font-medium text-slate-900 text-center print:text-[10px] print:font-semibold">
+                        <p className="font-semibold text-slate-900 text-center">
                           {item.name}
                         </p>
                         {item.times_in && (
@@ -395,8 +446,8 @@ export default function Home() {
               <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
                 {tableData.slice(1).map((item, index) => (
                   <div key={index} className="p-1 border border-dashed border-gray-400">
-                      <p className="text-sm font-medium text-slate-900 text-center ">{item[4]}</p>
-                      <p className="mt-1 border-t border-slate-100 flex items-center justify-center text-xs text-gray-500 font-mono">{date ? format(date, "yyyy-MM-dd") : ""}</p>
+                    <p className="text-sm font-medium text-slate-900 text-center ">{item[4]}</p>
+                    <p className="mt-1 border-t border-slate-100 flex items-center justify-center text-xs text-gray-500 font-mono">{date ? format(date, "yyyy-MM-dd") : ""}</p>
                   </div>
                 ))}
               </div>
@@ -468,20 +519,20 @@ export default function Home() {
         </DialogContent>
       </Dialog> */}
 
-      {/* <Dialog open={open_add_label_con} onOpenChange={setOpenAddLabelcon}>
+      <Dialog open={open_message} onOpenChange={setOpenmessage}>
         <DialogContent className="w-180 print:hidden">
           <DialogHeader>
-            <DialogTitle className="text-xl text-yellow-500">คำแนะนำ</DialogTitle>
+            <DialogTitle className="text-xl text-yellow-500">อัพเดท vertion 1.3</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <p>สามารถเพิ่ม Label ได้หลายชุดตามใบ PO ได้เลย</p>
+              <p>สามารถเลือกขนาดตัวหนังสือได้เลย</p>
               <p className="text-blue-500">(หรือตามความเหมาะสมครับ)</p>
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold">ตัวอย่าง</h1>
+            <h1 className="text-xl font-bold">ตัวอย่าง</h1>
+            <div className="flex flex-col p-2 items-center">
               <Image
-                src="/image/ex1.png"
+                src="/image/ex2.png"
                 width={600}
                 height={200}
                 alt="ตัวอย่าง"
@@ -489,11 +540,18 @@ export default function Home() {
             </div>
           </div>
           <div className="flex gap-3 justify-end">
-            <Button onClick={() => setOpenAddLabelcon(false)} variant="outline">ยกเลิก</Button>
-            <Button onClick={() => { setOpenAddLabelcon(false), setOpenAddLabel(true), setDate(undefined) }} variant="default">เพิ่ม Label <Plus /></Button>
+            <div className="flex items-center gap-2">
+              <p>ไม่ต้องแสดงอีก</p>
+              <Checkbox
+                id="dont-show"
+                checked={dontShowAgain}
+                onCheckedChange={(checked) => setDontShowAgain(!!checked)}
+              />
+            </div>
+            <Button onClick={handConfirm}>ปิด</Button>
           </div>
         </DialogContent>
-      </Dialog> */}
+      </Dialog>
     </div>
   );
 }
