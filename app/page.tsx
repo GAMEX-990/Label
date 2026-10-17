@@ -42,10 +42,10 @@ export default function Home() {
     const fetchData = async () => {
       try {
         await fetchdata();
-        const isHidden = localStorage.getItem("hide_popup_preference");
-        if (!isHidden) {
-          setOpenmessage(true);
-        }
+        // const isHidden = localStorage.getItem("hide_popup_preference");
+        // if (!isHidden) {
+        //   setOpenmessage(true);
+        // }
       } catch (error) {
         toast.add({
           type: "error",
@@ -57,12 +57,12 @@ export default function Home() {
     fetchData();
   }, [])
 
-  const handConfirm = () => {
-    if (dontShowAgain) {
-      localStorage.setItem("hide_popup_preference", "true");
-    };
-    setOpenmessage(false);
-  }
+  // const handConfirm = () => {
+  //   if (dontShowAgain) {
+  //     localStorage.setItem("hide_popup_preference", "true");
+  //   };
+  //   setOpenmessage(false);
+  // }
 
   // โหลด Loader2 เฉพาะฝั่งเบราว์เซอร์เท่านั้น ป้องกันปัญหา SSR 100%
   const Loader2 = dynamic(() => import("@/components/ui/labelanimation"), {
@@ -312,7 +312,7 @@ export default function Home() {
   // app/page.tsx
 
   const handlePrint = () => {
-    setOpenprint(false);
+    // setOpenprint(false);
     if (!product || product.length === 0) {
       toast.add({
         type: "error",
@@ -519,7 +519,7 @@ export default function Home() {
         </DialogContent>
       </Dialog> */}
 
-      <Dialog open={open_message} onOpenChange={setOpenmessage}>
+      {/* <Dialog open={open_message} onOpenChange={setOpenmessage}>
         <DialogContent className="w-180 print:hidden">
           <DialogHeader>
             <DialogTitle className="text-xl text-yellow-500">อัพเดท vertion 1.3</DialogTitle>
@@ -551,7 +551,7 @@ export default function Home() {
             <Button onClick={handConfirm}>ปิด</Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }
