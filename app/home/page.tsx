@@ -30,6 +30,7 @@ export default function Home() {
 
   const [open_add_label, setOpenAddLabel] = useState(false);
   const [open_message, setOpenmessage] = useState(false);
+  const [con_logout,setcon_logout] = useState(false);
   const [open_date, setOpenDate] = useState(false);
   const [open_con, setOpencon] = useState(false);
   const [open_conall, setOpenconall] = useState(false);
@@ -37,6 +38,7 @@ export default function Home() {
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
   const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading_logout, setisLoading_logout] = useState<boolean>(false);
   const [isLoadingdeletepo, setisLoadingdeletepo] = useState<boolean>(false);
   const [isLoadingdeleteall, setisLoadingdeleteall] = useState<boolean>(false);
 
@@ -152,6 +154,7 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
+      setisLoading_logout(true);
       const res = await fetch("/api/logout", {
         method: "POST",
       });
@@ -175,6 +178,8 @@ export default function Home() {
         type: "error",
         description: "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
       });
+    } finally {
+      setisLoading_logout(false);
     }
   };
 
@@ -395,7 +400,7 @@ export default function Home() {
               </div>
               <Button
                 variant="outline"
-                onClick={handleLogout}
+                onClick={() => {setcon_logout(true)}}
                 className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
               >
                 ออกจากระบบ<LogOut />
@@ -542,6 +547,19 @@ export default function Home() {
           <div className="flex gap-3 justify-end">
             <Button onClick={() => setOpenconall(false)} variant="outline">ยกเลิก</Button>
             <Button disabled={isLoadingdeleteall} onClick={handleDeleteAll} variant="destructive">{isLoadingdeleteall ? (<><Spinner />กำลังลบ...</>) : (<>ลบ</>)}</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={con_logout} onOpenChange={setcon_logout}>
+        <DialogContent className={`w-90`}>
+          <DialogHeader>
+            <DialogTitle className="text-xl text-red-500 font-bold">ยืนยันการออกจากระบบ</DialogTitle>
+            <p>ต้องการออกจากระบบใช่หรือไม่</p>
+          </DialogHeader>
+          <div className="flex gap-3 justify-end">
+            <Button onClick={() => setcon_logout(false)} variant="outline">ยกเลิก</Button>
+            <Button disabled={isLoading_logout} onClick={handleLogout} variant="destructive">{isLoading_logout ? (<><Spinner />กำลังออกจากระบบ...</>) : (<>ออกจากระบบ</>)}</Button>
           </div>
         </DialogContent>
       </Dialog>
