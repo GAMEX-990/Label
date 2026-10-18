@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  product: 'product'
+  product: 'product',
+  advert: 'advert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -74,12 +75,25 @@ export const ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
   po: 'po',
+  branch_product: 'branch_product',
   times_in: 'times_in',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const AdvertScalarFieldEnum = {
+  id: 'id',
+  branch: 'branch',
+  branch_name: 'branch_name',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertScalarFieldEnum = (typeof AdvertScalarFieldEnum)[keyof typeof AdvertScalarFieldEnum]
 
 
 export const SortOrder = {

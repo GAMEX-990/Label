@@ -13,10 +13,22 @@ datasource db {
 }
 
 model product {
-  id Int @id @default(autoincrement())
-  name String
-  po Int
-  times_in DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  name           String
+  po             Int
+  branch_product String
+  advert     advert   @relation(fields: [branch_product], references: [branch])
+  times_in       DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model advert {
+  id        Int       @id @default(autoincrement())
+  branch    String    @unique
+  branch_name String
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  product[]
 }

@@ -22,3 +22,8 @@ export * from './enums';
  * 
  */
 export type product = Prisma.productModel
+/**
+ * Model advert
+ * 
+ */
+export type advert = Prisma.advertModel
