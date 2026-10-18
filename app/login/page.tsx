@@ -64,6 +64,12 @@ const page = () => {
               </form>
             </FieldGroup>
           </Field>
+          <footer className="text-gray-400 text-[10px] mt-4">
+            <hr className="w-full text-black" />
+            <p>Web Developer: GAMEX.</p>
+            <p>GITHUB: GAMEX-990</p>
+            <hr className="w-full text-black" />
+          </footer>
         </div>
       </div>
     </div>
