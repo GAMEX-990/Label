@@ -54,7 +54,7 @@ const page = () => {
             <FieldGroup>
               <form onSubmit={handleLogin}>
                 <Field>
-                  <FieldLabel htmlFor="username">ID สาขา</FieldLabel>
+                  <FieldLabel htmlFor="username">ID สาขา (เช่น 1234)</FieldLabel>
                   <Input id="username" value={bracnch_id} onChange={(e) => getbracnch_id(e.target.value)} type="text" placeholder="กรุณากรอก ID สาขา" />
                   <FieldDescription>
                     <span className="text-yellow-500">Tips: </span>เพื่อให้ระบบสามารถดึงข้อมูลได้แม่นยำขึ้น <span className="text-blue-500">"ขออภัยในความไม่สะดวกนะครับ"</span>
