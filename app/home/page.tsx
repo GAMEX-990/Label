@@ -371,26 +371,28 @@ export default function Home() {
               <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
               <p className="text-sm text-gray-500">version 1.4(Login&logout Update)</p>
             </div>
-            
-            <div className="flex print:hidden lg:gap-x-4">
+
+            <div className="flex print:hidden lg:gap-x-2">
               <Button onClick={() => { setOpenAddLabel(true), setDate(undefined) }} variant="outline">เพิ่ม Label <Plus /></Button>
-              <Button id="label-print-area" onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
-              <Select value={String(tsize)} onValueChange={(val) => gettextsize(Number(val))} disabled={product.length === 0} items={textsize}>
-                <SelectTrigger className="w-full max-w-48">
-                  <p className="flex items-center gap-1 text-black">ขนาด <SelectValue placeholder="เลือกขนาด" /> px</p>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>ปรับขนาดตัวหนังสือ</SelectLabel>
-                    {textsize.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
+              <div className={`${product.length === 0 ? "hidden" : "flex gap-x-2"}`}>
+                <Button id="label-print-area" onClick={handlePrint} disabled={product.length === 0} variant="outline">PrintLabel <Printer /></Button>
+                <Select value={String(tsize)} onValueChange={(val) => gettextsize(Number(val))} disabled={product.length === 0} items={textsize}>
+                  <SelectTrigger className="w-full max-w-48">
+                    <p className="flex items-center gap-1 text-black">ขนาด <SelectValue placeholder="เลือกขนาด" /> px</p>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>ปรับขนาดตัวหนังสือ</SelectLabel>
+                      {textsize.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Button onClick={() => setOpenconall(true)} disabled={product.length === 0} variant="destructive">ลบ Label ทั้งหมด <Trash /></Button>
+              </div>
               <Button
                 variant="outline"
                 onClick={handleLogout}
@@ -404,7 +406,7 @@ export default function Home() {
           {product.length === 0 ? (
             <div className="flex flex-col justify-center h-screen items-center">
               <div className="flex flex-col items-center justify-center">
-                <h1>เพิ่ม Label ได้ที่ปุ่มด้านบน...</h1>
+                <h1 className="text-2xl"><span className="text-yellow-500 font-bold">Hello</span> {dataBranch?.branch_name}({dataBranch?.branch})</h1>
                 <Loadertext />
                 <Loader2 />
               </div>
