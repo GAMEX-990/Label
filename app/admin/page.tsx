@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { House, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Field } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { toast } from '@/components/ui/toast';
 
 const page = () => {
@@ -25,29 +25,32 @@ const page = () => {
         })
 
         const data = await req.json();
-        if(req.ok){
+        if (req.ok) {
             toast.add({
                 type: "success",
                 description: "บันทึกข้อมูลสำเร็จ",
-              })
+            })
         } else {
             toast.add({
-              type: "error",
-              description: `${data.message}`,
-              priority: "high"
+                type: "error",
+                description: `${data.message}`,
+                priority: "high"
             })
-          }
+        }
         setopenbranch(false);
     };
     return (
-        <div>
-            <div className='flex items-center justify-center mt-10'>
-                <p className='text-2xl'>Admin</p>
+        <div className='flex flex-col min-h-screen items-center justify-center'>
+            <div className='border p-6 w-90 rounded-2xl'>
+                <div className="flex flex-col gap-4 justify-center items-center">
+                    <div>
+                        <h1 className='text-2xl space-x-2'><span className='text-yellow-500 font-bold'>Hello</span><span>Admin</span></h1>
+                    </div>
+                    <div>
+                        <Button onClick={() => setopenbranch(true)} className="cursor-pointer">เพิ่มสาขา</Button>
+                    </div>
+                </div>
             </div>
-            <div>
-                <Button onClick={() => setopenbranch(true)} className="cursor-pointer">เพิ่มสาขา</Button>
-            </div>
-
             <Dialog open={openbranch} onOpenChange={setopenbranch}>
                 <DialogContent className={`w-80`}>
                     <DialogHeader>
@@ -56,8 +59,9 @@ const page = () => {
                     <form onSubmit={handleSaveBranch}>
                         <div className="items-center flex flex-col">
                             <Field>
-                                {bracnch}
+                                <FieldLabel htmlFor="username">กรอกชื่อสาขา</FieldLabel>
                                 <Input value={bracnch_name} onChange={(e) => { getbracnch_name(e.target.value) }} placeholder="ใส่ ชื่อ สาขา" />
+                                <FieldLabel htmlFor="username">กรอก ID สาขา</FieldLabel>
                                 <Input value={bracnch} onChange={(e) => { getbracnch(e.target.value) }} placeholder="ใส่ ID สาขา" />
                                 <div className="flex gap-3 justify-end">
                                     <Button onClick={() => setopenbranch(false)} variant="outline">ยกเลิก</Button>

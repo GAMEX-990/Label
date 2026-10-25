@@ -33,9 +33,11 @@ const page = () => {
       if (res.ok) {
         toast.add({ type: "success", description: `เข้าใช้งานสาขา ${data.branch_name}` });
         route.push(`/home`)
+      } else {
+        toast.add({type: "error", description: "ID สาขาไม่ถูกต้อง"})
       }
     } catch (error) {
-      toast.add({ type: "erroe", description: "เกิดข้อผิดพลาดฝั่ง use client" });
+      toast.add({ type: "error", description: "เกิดข้อผิดพลาดฝั่ง use client" });
     } finally {
       setloding(false);
     }
