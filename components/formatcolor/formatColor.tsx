@@ -92,8 +92,9 @@ const COLORS: Record<string, string> = {
   "silver": "text-zinc-600",
   "ซิลเวอร์": "text-zinc-600",
   "เงิน": "text-zinc-600",
-  "white": "text-slate-600",
-  "ขาว": "text-slate-600",
+  "white": "text-white bg-slate-200 px-1 rounded",
+  "White": "text-white bg-slate-200 px-1 rounded",
+  "ขาว": "text-white text- bg-slate-200 px-1 rounded",
 
   // ===== กลุ่มสีดำ / เทาเข้ม =====
   "black titanium": "text-neutral-900 font-bold",
