@@ -371,7 +371,7 @@ export default function Home() {
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
             <div className="print:hidden">
               <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500">version 1.5(Text Color Update)</p>
+              <p className="text-xs text-gray-500 font-bold">version 1.5 (<span className="animate-rainbow-text">Text Color Update</span>)</p>
             </div>
 
             <div className="flex print:hidden lg:gap-x-2">
