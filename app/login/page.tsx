@@ -45,7 +45,7 @@ const page = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center">
+    <div className="login-bg flex flex-col min-h-screen items-center justify-center">
       <div className="mb-10 items-center flex flex-col">
         <h1 className="text-4xl font-bold"><span className="text-yellow-500">Easy</span> Label Print</h1>
       </div>

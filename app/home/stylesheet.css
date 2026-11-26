@@ -1,0 +1,11 @@
+body {
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px; /* ขยายจาก 24px เป็น 48px */
+}
+.label-card {
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}

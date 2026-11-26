@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ProductType } from "../types/product";
 import { BranchType } from "../types/databrand";
 import { useRouter } from "next/navigation";
+import { formatColor } from "@/components/formatcolor/formatColor";
 
 export default function Home() {
   const [po, getpo] = useState(0);
@@ -370,7 +371,7 @@ export default function Home() {
           <div className="lg:flex lg:items-center lg:justify-between lg:mt-10 lg:px-50 p-4 space-y-4">
             <div className="print:hidden">
               <h1 className="flex items-center gap-2 text-2xl font-bold">Easy Label <span className="text-yellow-500 rounded-sm">Print</span><ChevronsUp /></h1>
-              <p className="text-sm text-gray-500">version 1.4(Login&logout Update)</p>
+              <p className="text-sm text-gray-500">version 1.5(Text Color Update)</p>
             </div>
 
             <div className="flex print:hidden lg:gap-x-2">
@@ -446,8 +447,8 @@ export default function Home() {
                     print:border print:border-dashed print:border-gray-400
                     print:box-border
                   `}>
-                        <p className="font-semibold text-slate-900 text-center">
-                          {item.name}
+                        <p className="font-semibold text-center">
+                          {formatColor(item.name)}
                         </p>
                         {item.times_in && (
                           <div className="mt-1 border-t border-slate-100 flex items-center justify-center text-xs text-gray-500 font-mono print:text-black">
